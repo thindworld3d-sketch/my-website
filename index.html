@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Deals</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+}
+
+/* Header */
+header {
+  background: #ffffff;
+  padding: 15px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Search */
+.search-box {
+  padding: 10px;
+  text-align: center;
+}
+
+.search-box input {
+  width: 90%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+/* Sections */
+.section {
+  padding: 15px;
+}
+
+.section h2 {
+  margin-bottom: 5px;
+}
+
+.section p {
+  color: gray;
+  margin-top: 0;
+}
+
+/* Grid */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+}
+
+/* Card */
+.card {
+  background: #fff;
+  padding: 10px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  transition: 0.2s;
+  height: 350px; /* same size cards */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+/* Image fit fix */
+.card img {
+  width: 100%;
+  height: 250px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 10px;
+}
+
+/* Price */
+.price {
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+/* Button */
+.btn {
+  background: #28a745;
+  color: white;
+  padding: 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 15px;
+  font-size: 12px;
+  color: gray;
+}
+</style>
+</head>
+
+<body>
+
+<header>My Deals</header>
+
+<div class="search-box">
+  <input type="text" id="search" placeholder="Search by price (e.g. 999)">
+</div>
+
+<!-- Budget -->
+<div class="section">
+  <h2>Budget Picks</h2>
+  <p>₹200 – ₹1000</p>
+  <div class="products" id="low"></div>
+</div>
+
+<!-- Medium -->
+<div class="section">
+  <h2>Best Value</h2>
+  <p>₹1000 – ₹5000</p>
+  <div class="products" id="mid"></div>
+</div>
+
+<!-- High -->
+<div class="section">
+  <h2>Premium Picks</h2>
+  <p>Above ₹5000</p>
+  <div class="products" id="high"></div>
+</div>
+
+<footer>
+This website contains affiliate links. We may earn a commission.
+</footer>
+
+<script>
+
+/* =========================
+   🔥 ADD PRODUCTS HERE
+========================= */
+
+let products = [
+
+  // Example (delete later)
+  {
+    image: "Screenshot 2026-03-17 130329.png",
+    price: 799,
+    link: "https://www.amazon.in/Portable-Vegetable-Stainless-Chopping-Vegetables/dp/B0FCSN3CJZ/ref=sr_1_3_sspa?crid=1H71VUQ59AO1K&dib=eyJ2IjoiMSJ9.G469UX-ffWt2EizImMDSKix_9IrWriqcZsKwZZtNe9i0TEJ3FLuIRoAz3I-bA8_GMbosh59798NwqIwzTMFpJ7OHZFHGIz7PjxeXNOlCT0HL3uJzCx0zAfY_WfXIbEwiD5rB1PLUCtwj4tlbTeysBX9NKvbtqK8jA2lmLb-AG36Ls19lHsCiNTWLfweemn044RpZ60gGjHGrPCo-JbyuokG0Oe_wDsCgBxILYuhYV3jwht3PadWt3T0qshduzDuzXoUM8DWsuNYQ07v-Qy4IypDQDcUZ4wqyjCYSAd2ws7M.eDF9AgTQ0wlmB-UfZDok7_WWrdCFEb-KARWF0GEkp08&dib_tag=se&keywords=best%2Bselling%2Bproducts%2Bin%2Bkitchen&qid=1774363185&sprefix=best%2Bselling%2Bproducts%2Caps%2C397&sr=8-3-spons&aref=C199rPWvor&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1"
+  },
+
+  {
+    image: "image.png",
+    price: 629,
+    link: "https://www.amazon.in/Portable-Vegetable-Stainless-Chopping-Vegetables/dp/B0FCSN3CJZ/ref=sr_1_3_sspa?crid=1H71VUQ59AO1K&dib=eyJ2IjoiMSJ9.G469UX-ffWt2EizImMDSKix_9IrWriqcZsKwZZtNe9i0TEJ3FLuIRoAz3I-bA8_GMbosh59798NwqIwzTMFpJ7OHZFHGIz7PjxeXNOlCT0HL3uJzCx0zAfY_WfXIbEwiD5rB1PLUCtwj4tlbTeysBX9NKvbtqK8jA2lmLb-AG36Ls19lHsCiNTWLfweemn044RpZ60gGjHGrPCo-JbyuokG0Oe_wDsCgBxILYuhYV3jwht3PadWt3T0qshduzDuzXoUM8DWsuNYQ07v-Qy4IypDQDcUZ4wqyjCYSAd2ws7M.eDF9AgTQ0wlmB-UfZDok7_WWrdCFEb-KARWF0GEkp08&dib_tag=se&keywords=best%2Bselling%2Bproducts%2Bin%2Bkitchen&qid=1774363185&sprefix=best%2Bselling%2Bproducts%2Caps%2C397&sr=8-3-spons&aref=C199rPWvor&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1"
+  },
+
+];
+
+/* =========================
+   DISPLAY FUNCTION
+========================= */
+
+function displayProducts(list){
+  document.getElementById("low").innerHTML = "";
+  document.getElementById("mid").innerHTML = "";
+  document.getElementById("high").innerHTML = "";
+
+  if(list.length === 0){
+    document.getElementById("low").innerHTML = "<p>No products found</p>";
+    return;
+  }
+
+  list.forEach(p => {
+    let card = `
+      <div class="card">
+        <img src="${p.image}">
+        <div class="price">₹${p.price}</div>
+        <a href="${p.link}" target="_blank" class="btn">Buy Now</a>
+      </div>
+    `;
+
+    if(p.price >= 200 && p.price <= 1000){
+      document.getElementById("low").innerHTML += card;
+    }
+    else if(p.price > 1000 && p.price <= 5000){
+      document.getElementById("mid").innerHTML += card;
+    }
+    else if(p.price > 5000){
+      document.getElementById("high").innerHTML += card;
+    }
+  });
+}
+
+displayProducts(products);
+
+/* =========================
+   🔍 SEARCH SYSTEM
+========================= */
+
+document.getElementById("search").addEventListener("input", function(){
+  let value = this.value.toLowerCase();
+
+  let filtered = products.filter(p => 
+    p.price.toString().includes(value)
+  );
+
+  displayProducts(filtered);
+});
+
+</script>
+
+</body>
+</html>
